@@ -1,0 +1,54 @@
+# Environment variables
+.env
+
+# Secrets and sensitive information
+*.pem
+*.key
+*.cert
+*password*
+*secret*
+!*example*
+!*sample*
+
+# Temp files
+*.tmp
+temp_pw.txt
+cloudbuild.yaml
+
+# Logs
+*.log
+logs/
+
+# PowerShell/Windows artifacts
+*.ps1.log
+*.ps1.out
+
+# Node.js (for n8n local development)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker build artifacts
+.docker/
+
+# Google Cloud credentials and configs
+credentials.json
+gcloud-service-key.json
+.gcloudignore
+
+# IDE/Editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
