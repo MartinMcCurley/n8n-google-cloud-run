@@ -1,6 +1,6 @@
-# MMA Database with n8n on Google Cloud Run
+# n8n on Google Cloud Run
 
-This repository contains scripts and configuration to deploy n8n workflow automation platform on Google Cloud Run with a PostgreSQL 13 database for the MMA database project.
+This repository contains scripts and configuration to deploy n8n workflow automation platform on Google Cloud Run with a PostgreSQL 13 database.
 
 ## Overview
 
@@ -28,14 +28,18 @@ This deployment uses three PowerShell scripts to set up the infrastructure:
 
 ## Configuration
 
-The scripts are pre-configured for the MMA database project using europe-west2 (London) region with the following settings:
+The scripts use environment variables for configuration. Set these variables in a `.env` file before running the scripts. Required variables are listed in each script.
 
-- Project ID: metamma
-- Region: europe-west2 (London)
-- Database: PostgreSQL 13 (mma-db-pg13)
-- n8n Container: 1.40.0-mma
+Default values (if not overridden by `.env`) are set for a sample deployment, typically using a specific region like `europe-west2`.
 
-All passwords and encryption keys are securely configured in the scripts.
+Example configuration points:
+
+- Project ID: Your Google Cloud Project ID
+- Region: e.g., `europe-west2` (London)
+- Database: PostgreSQL 13 (e.g., `n8n-db-pg13`)
+- n8n Container: Specify version (e.g., `1.40.0`) or use `latest`
+
+Passwords and encryption keys are securely configured during the setup process using Google Secret Manager, sourced from your `.env` file.
 
 ## Deployment Steps
 
@@ -125,13 +129,13 @@ After deployment, access your n8n instance at the URL provided in the deployment
 ### Checking Logs
 
 ```powershell
-gcloud run services logs read mma-n8n-service --region=europe-west2
+gcloud run services logs read <your-cloud-run-service-name> --region=<your-region>
 ```
 
 ### Updating Environment Variables
 
 ```powershell
-gcloud run services update mma-n8n-service --region=europe-west2 --set-env-vars="KEY=VALUE"
+gcloud run services update <your-cloud-run-service-name> --region=<your-region> --set-env-vars="KEY=VALUE"
 ```
 
 ### Upgrading n8n Version
@@ -158,12 +162,12 @@ If you encounter issues:
 
 1. Check Cloud Run logs:
    ```powershell
-   gcloud run services logs read mma-n8n-service --region=europe-west2
+   gcloud run services logs read <your-cloud-run-service-name> --region=<your-region>
    ```
 
 2. Verify database connectivity:
    ```powershell
-   gcloud sql instances describe mma-db-pg13
+   gcloud sql instances describe <your-db-instance-name>
    ```
 
 3. Common issues:
@@ -210,7 +214,7 @@ Run the script to create your Cloud SQL PostgreSQL instance, database, user, sec
 
 You have two deployment scripts. Use **one** depending on which setup you want:
 
-#### **A. For the MMA custom setup:**
+#### **A. For a specific n8n version (using Dockerfile):**
 
 ```powershell
 .\deploy-n8n.ps1
@@ -221,9 +225,9 @@ You have two deployment scripts. Use **one** depending on which setup you want:
 - Retrieves DB and secret info
 - Deploys the container to Cloud Run with all required environment variables, secrets, and health checks
 
-#### **B. For the latest n8n version (as per your newer script):**
+#### **B. For the latest stable n8n version:**
 
-If you want to deploy the latest n8n version (as defined in `deploy-latest-n8n.ps1`), run:
+If you want to deploy the latest stable n8n version (as defined in `deploy-latest-n8n.ps1`), run:
 
 ```powershell
 .\deploy-latest-n8n.ps1
@@ -253,15 +257,15 @@ https://<cloud-run-service-name>-<project-number>.<region>.run.app
 
 - **View logs:**  
   ```powershell
-  gcloud run services logs read mma-n8n-service --region=europe-west2
+  gcloud run services logs read <your-cloud-run-service-name> --region=<your-region>
   ```
 - **Check deployment status:**  
   ```powershell
-  gcloud run services describe mma-n8n-service --region=europe-west2 --format='value(status)'
+  gcloud run services describe <your-cloud-run-service-name> --region=<your-region> --format='value(status)'
   ```
 - **Update environment variables:**  
   ```powershell
-  gcloud run services update mma-n8n-service --region=europe-west2 --set-env-vars="KEY=VALUE"
+  gcloud run services update <your-cloud-run-service-name> --region=<your-region> --set-env-vars="KEY=VALUE"
   ```
 
 ---
